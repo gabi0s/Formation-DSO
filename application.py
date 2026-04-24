@@ -160,6 +160,11 @@ def view_file():
     if not filename:
         abort(400, description="Missing file parameter")
 
+    # N'autoriser qu'un nom de fichier simple (pas de chemin)
+    if os.path.isabs(filename) or '..' in filename or '/' in filename or '\\' in filename:
+        abort(400, description="Invalid file parameter")
+
+    filename = os.path.basename(filename)
     base_path = os.path.abspath('./files')  # Répertoire sécurisé
     requested_path = os.path.abspath(os.path.join(base_path, filename))
 
